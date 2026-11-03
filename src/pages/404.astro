@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import LogoMark from '../components/LogoMark.astro';
+---
+
+<Base titulo="Página no encontrada · ONG Alumco" descripcion="La página que buscas no existe.">
+  <main id="contenido" class="no-encontrada">
+    <LogoMark size={96} />
+    <h1>Esta página aún no florece.</h1>
+    <p>La dirección que buscas no existe o cambió de lugar.</p>
+    <a class="boton boton--primario" href="/">Volver al inicio</a>
+  </main>
+</Base>
+
+<style>
+  .no-encontrada {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 20px;
+    min-height: 100svh;
+    padding: 40px var(--margen);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+  }
+
+  p {
+    color: var(--tinta-suave);
+  }
+</style>

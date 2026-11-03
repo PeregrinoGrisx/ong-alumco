@@ -16,6 +16,19 @@ npm run build     # genera el sitio estático en dist/
 npm run preview   # sirve dist/ localmente
 ```
 
+## Publicación
+
+El sitio se publica en Cloudflare Workers como sitio estático, en la cuenta de
+la ONG (Ongalumco@gmail.com). La configuración está en `wrangler.jsonc`, que fija
+el ID de esa cuenta para no publicar en otra por error.
+
+```bash
+npx wrangler login   # una vez, autorizando la cuenta de la ONG
+npm run deploy       # compila y publica
+```
+
+Vista previa: https://ong-alumco.ong-alumco.workers.dev
+
 ## Estructura
 
 ```
