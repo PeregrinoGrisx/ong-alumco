@@ -7,8 +7,6 @@ interface Pieza {
   anillo: number;
   i: number;
   ang: number;
-  cx: number;
-  cy: number;
   color: string | undefined;
 }
 
@@ -56,7 +54,8 @@ function mezclar(a: Rgb, b: Rgb, t: number): string {
 
 function iniciar(raiz: HTMLElement) {
   const flor = raiz.querySelector<SVGSVGElement>('.flor');
-  if (!flor) return;
+  const grupo = raiz.querySelector<SVGGElement>('.flor__encuadre');
+  if (!flor || !grupo) return;
 
   const centro = raiz.querySelector<SVGPathElement>('.flor__centro');
   const lavados = [...raiz.querySelectorAll<HTMLElement>('.lavado')];
@@ -66,8 +65,6 @@ function iniciar(raiz: HTMLElement) {
     anillo: Number(el.dataset.anillo),
     i: Number(el.dataset.i),
     ang: Number(el.dataset.ang ?? 0),
-    cx: Number(el.dataset.cx ?? 0),
-    cy: Number(el.dataset.cy ?? 0),
     color: el.dataset.color,
   }));
 
@@ -83,16 +80,23 @@ function iniciar(raiz: HTMLElement) {
   const pantallaMovil = matchMedia('(max-width: 899px)');
 
   let anclas: number[] = [];
-  let ancho = 0;
+  let respirando = true;
   let actual = 0;
   let objetivo = 0;
   let cuadro = 0;
 
   // Posición de scroll en la que empieza cada etapa: cuando el borde superior
   // de la sección correspondiente sube hasta el 55 % de la altura de la pantalla.
+  // Píxeles por unidad del dibujo: las 920 unidades de la flor ocupan 118vmin
+  // (máx. 1180 px) en escritorio y 150vw en móvil, antes de aplicar la escala de etapa.
+  function pixelesPorUnidad() {
+    const lado = pantallaMovil.matches
+      ? innerWidth * 1.5
+      : Math.min(Math.min(innerWidth, innerHeight) * 1.18, 1180);
+    return lado / 920;
+  }
+
   function medir() {
-    // Ancho de la flor sin transformaciones, para centrarla en su punto.
-    ancho = parseFloat(getComputedStyle(flor!).width);
     const maximo = document.documentElement.scrollHeight - innerHeight;
     let previo = 0;
     anclas = SECCIONES.map((id, i) => {
@@ -123,13 +127,21 @@ function iniciar(raiz: HTMLElement) {
     const t1 = tramo(s, 0.05, 1);
     const apertura = salida(t1);
 
-    const x = interpolar(encuadre.x, s) * innerWidth - ancho / 2;
-    const y = interpolar(encuadre.y, s) * innerHeight - ancho / 2;
-    const escala = interpolar(encuadre.escala, s);
+    const x = interpolar(encuadre.x, s) * innerWidth;
+    const y = interpolar(encuadre.y, s) * innerHeight;
+    const escala = interpolar(encuadre.escala, s) * pixelesPorUnidad();
     const giro = s * 7 - (1 - apertura) * 15;
-    flor!.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${giro}deg) scale(${escala})`;
+    grupo!.style.transform = `translate(${x}px, ${y}px) rotate(${giro}deg) scale(${escala})`;
     flor!.style.opacity = String(interpolar(encuadre.opacidad, s));
     if (centro) centro.style.transform = `scale(${0.45 + 0.55 * apertura})`;
+
+    // El capullo "respira" (animación SMIL) solo mientras se ve cerrado.
+    const debeRespirar = s < 1 && !movimientoReducido.matches;
+    if (debeRespirar !== respirando) {
+      if (debeRespirar) flor!.unpauseAnimations();
+      else flor!.pauseAnimations();
+      respirando = debeRespirar;
+    }
 
     const p2 = tramo(s, 0.9, 2);
     const p3 = tramo(s, 1.9, 3);
@@ -138,10 +150,10 @@ function iniciar(raiz: HTMLElement) {
 
     for (const p of piezas) {
       if (p.anillo === 1) {
-        // Cerrado, el capullo es el logo azul en miniatura con las piezas apretadas.
+        // Cerrado, el capullo es el logo azul en miniatura.
         const e = salida(clamp01(t1 * 1.35 - p.i * 0.045));
         const k = 1 - e;
-        p.el.style.transform = `translate(${-p.cx * 0.1 * k}px, ${-p.cy * 0.1 * k}px) scale(${1 - 0.62 * k})`;
+        p.el.style.transform = `scale(${1 - 0.62 * k})`;
         p.el.style.fill = mezclar(colorCapullo, paleta[p.color ?? 'azul'], e);
       } else if (p.anillo === 2) {
         const t = clamp01(p2 * 1.4 - p.i * 0.05);

@@ -29,83 +29,95 @@ const halos = [275, 385];
   <div class="lavado lavado--calido"></div>
   <div class="lavado lavado--atardecer"></div>
 
-  <svg class="flor" viewBox="-460 -460 920 920" focusable="false">
-    <g class="flor__respira">
-      {
-        halos.map((r) => (
-          <circle
-            class="flor__halo"
-            r={r}
-            fill="none"
-            stroke="var(--azul)"
-            stroke-width="1.5"
-            stroke-dasharray="4 10"
-            pathLength="1000"
-          />
-        ))
-      }
-
-      <g>
+  <svg class="flor" focusable="false">
+    <g class="flor__encuadre">
+      <g class="flor__respira">
+        <!-- Animación SVG nativa: se redibuja como vector (una animación CSS se
+             compone como imagen y se pixela al escalar). -->
+        <animateTransform
+          attributeName="transform"
+          type="scale"
+          values="1;1.03;1"
+          keyTimes="0;0.5;1"
+          calcMode="spline"
+          keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
+          dur="6s"
+          repeatCount="indefinite"
+        />
         {
-          semillas.map((s, i) => (
-            <path
-              class="flor__pieza"
-              data-anillo="4"
-              data-i={i}
-              data-ang={s.ang}
-              d="M0 -10 L10 0 L0 10 L-10 0 Z"
-              fill={`var(--${s.color})`}
+          halos.map((r) => (
+            <circle
+              class="flor__halo"
+              r={r}
+              fill="none"
+              stroke="var(--azul)"
+              stroke-width="1.5"
+              stroke-dasharray="4 10"
+              pathLength="1000"
             />
           ))
         }
-      </g>
 
-      <g opacity="0.62">
-        {
-          anillo3.map((p, i) => (
-            <path
-              class="flor__pieza"
-              data-anillo="3"
-              data-i={i}
-              data-ang={p.ang}
-              d="M0 -165 L22 -248 L0 -330 L-22 -248 Z"
-              fill={`var(--${p.color})`}
-            />
-          ))
-        }
-      </g>
+        <g>
+          {
+            semillas.map((s, i) => (
+              <path
+                class="flor__pieza"
+                data-anillo="4"
+                data-i={i}
+                data-ang={s.ang}
+                d="M0 -10 L10 0 L0 10 L-10 0 Z"
+                fill={`var(--${s.color})`}
+              />
+            ))
+          }
+        </g>
 
-      <g opacity="0.88">
-        {
-          anillo2.map((p, i) => (
-            <path
-              class="flor__pieza"
-              data-anillo="2"
-              data-i={i}
-              data-ang={p.ang}
-              d="M0 -62 L48 -150 L0 -240 L-48 -150 Z"
-              fill={`var(--${p.color})`}
-            />
-          ))
-        }
-      </g>
+        <g opacity="0.62">
+          {
+            anillo3.map((p, i) => (
+              <path
+                class="flor__pieza"
+                data-anillo="3"
+                data-i={i}
+                data-ang={p.ang}
+                d="M0 -165 L22 -248 L0 -330 L-22 -248 Z"
+                fill={`var(--${p.color})`}
+              />
+            ))
+          }
+        </g>
 
-      <g>
-        {
-          petalosLogo.map((p, i) => (
-            <path
-              class="flor__pieza"
-              data-anillo="1"
-              data-i={i}
-              data-cx={p.cx}
-              data-cy={p.cy}
-              data-color={p.color}
-              d={p.d}
-              fill={`var(--${p.color})`}
-            />
-          ))
-        }
-        <path class="flor__centro" d={centroLogo} fill="var(--coral)" />
+        <g opacity="0.88">
+          {
+            anillo2.map((p, i) => (
+              <path
+                class="flor__pieza"
+                data-anillo="2"
+                data-i={i}
+                data-ang={p.ang}
+                d="M0 -62 L48 -150 L0 -240 L-48 -150 Z"
+                fill={`var(--${p.color})`}
+              />
+            ))
+          }
+        </g>
+
+        <g>
+          {
+            petalosLogo.map((p, i) => (
+              <path
+                class="flor__pieza"
+                data-anillo="1"
+                data-i={i}
+                data-color={p.color}
+                d={p.d}
+                fill={`var(--${p.color})`}
+              />
+            ))
+          }
+          <path class="flor__centro" d={centroLogo} fill="var(--coral)" />
+        </g>
       </g>
     </g>
   </svg>
@@ -159,16 +171,21 @@ const halos = [275, 385];
       radial-gradient(60% 60% at 10% 30%, rgb(57 94 159 / 0.14), transparent 70%);
   }
 
+  /* El SVG cubre la pantalla y la escala se aplica dentro (en .flor__encuadre):
+     así se dibuja como vector a la resolución real. Escalar el elemento con CSS
+     hace que el navegador lo rasterice y lo estire, y se ve pixelado. */
   .flor {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: min(118vmin, 1180px);
-    height: min(118vmin, 1180px);
+    inset: 0;
+    width: 100%;
+    height: 100%;
     max-width: none;
     overflow: visible;
-    transform-origin: 50% 50%;
-    will-change: transform, opacity;
+  }
+
+  .flor__encuadre {
+    transform-box: view-box;
+    transform-origin: 0 0;
   }
 
   /* Antes de que corra el script, la flor queda oculta para no "saltar". */
@@ -182,32 +199,9 @@ const halos = [275, 385];
     transform-origin: 0 0;
   }
 
-  .flor__respira {
-    transform-box: view-box;
-    transform-origin: 0 0;
-    animation: respirar 6s ease-in-out infinite;
-  }
-
-  @keyframes respirar {
-    50% {
-      transform: scale(1.03);
-    }
-  }
-
   @media (max-width: 899px) {
-    .flor {
-      width: 150vw;
-      height: 150vw;
-    }
-
     .fondo-flor::after {
       background: rgb(251 250 246 / 0.35);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .flor__respira {
-      animation: none;
     }
   }
 </style>
