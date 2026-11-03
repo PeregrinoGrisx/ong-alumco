@@ -1,0 +1,18 @@
+// Publicación en Cloudflare Workers como sitio estático (sin código de servidor).
+// `npm run deploy` compila con Astro y sube la carpeta dist/.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ong-alumco",
+  // Cuenta de Cloudflare de la ONG (Ongalumco@gmail.com).
+  "account_id": "163630a25c28b719b75398ba8099528c",
+  "compatibility_date": "2026-10-19",
+  // Dominios públicos del sitio (asignados como Custom Domains del Worker).
+  "routes": [
+    { "pattern": "ongalumco.cl", "custom_domain": true },
+    { "pattern": "www.ongalumco.cl", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

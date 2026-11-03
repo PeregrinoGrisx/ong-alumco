@@ -1,0 +1,67 @@
+---
+// Florcita del logo que florece cuando su sección entra en pantalla.
+import { petalosLogo, centroLogo } from '../data/flor';
+
+interface Props {
+  size?: number;
+}
+
+const { size = 26 } = Astro.props;
+---
+
+<svg
+  class="flor-seccion"
+  width={size}
+  height={size}
+  viewBox="-102 -102 204 204"
+  aria-hidden="true"
+  focusable="false"
+  data-florecer
+>
+  {
+    petalosLogo.map((p, i) => (
+      <path
+        d={p.d}
+        fill={`var(--${p.color})`}
+        style={`--tx:${(-p.cx * 0.8).toFixed(1)}px;--ty:${(-p.cy * 0.8).toFixed(1)}px;--i:${i}`}
+      />
+    ))
+  }
+  <path class="centro" d={centroLogo} fill="var(--coral)" />
+</svg>
+
+<style>
+  .flor-seccion {
+    flex: none;
+    overflow: visible;
+  }
+
+  .flor-seccion path {
+    transform-box: view-box;
+    transform-origin: 0 0;
+    transform: translate(var(--tx), var(--ty)) rotate(-60deg) scale(0.2);
+    opacity: 0;
+    transition:
+      transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 70ms + 150ms),
+      opacity 0.4s ease calc(var(--i) * 70ms + 150ms);
+  }
+
+  .flor-seccion .centro {
+    transform: scale(0);
+    opacity: 1;
+    transition-delay: 0s;
+  }
+
+  .flor-seccion:global(.visible) path {
+    transform: none;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flor-seccion path {
+      transform: none;
+      opacity: 1;
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import FlorSeccion from './FlorSeccion.astro';
+import { mision, vision, areas } from '../data/sitio';
+
+const coloresAreas = ['azul', 'verde', 'coral', 'ambar', 'azul'];
+---
+
+<section id="mision" class="seccion">
+  <div class="contenedor">
+    <p class="antetitulo"><FlorSeccion /> Hacia dónde vamos</p>
+    <h2 class="titulo-seccion" data-revelar>Cuidar con propósito, todos los días.</h2>
+
+    <div class="mv">
+      <article class="mv__tarjeta panel" data-revelar>
+        <h3 class="mv__titulo">
+          <span class="mv__marca mv__marca--coral" aria-hidden="true"></span>
+          Misión
+        </h3>
+        <p class="mv__texto">{mision}</p>
+        <ul class="mv__areas" aria-label="Áreas de atención">
+          {areas.map((a, i) => <li style={`--acento: var(--${coloresAreas[i]})`}>{a}</li>)}
+        </ul>
+      </article>
+
+      <article class="mv__tarjeta mv__tarjeta--vision panel" data-revelar style="--retraso: 0.12s">
+        <h3 class="mv__titulo">
+          <span class="mv__marca mv__marca--verde" aria-hidden="true"></span>
+          Visión
+        </h3>
+        <p class="mv__texto mv__texto--destacado">{vision}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mv {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(18px, 2.4vw, 28px);
+    margin-top: clamp(36px, 5vw, 56px);
+    align-items: stretch;
+  }
+
+  .mv__tarjeta {
+    padding: clamp(28px, 4vw, 48px);
+  }
+
+  .mv__tarjeta--vision {
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(175 221 131 / 0.28), transparent 60%),
+      var(--superficie);
+  }
+
+  .mv__titulo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+  }
+
+  .mv__marca {
+    width: 16px;
+    height: 16px;
+    transform: rotate(45deg);
+    border-radius: 3px;
+  }
+
+  .mv__marca--coral {
+    background: var(--coral);
+  }
+
+  .mv__marca--verde {
+    background: var(--verde);
+  }
+
+  .mv__texto {
+    margin-top: 18px;
+    color: var(--tinta-suave);
+  }
+
+  .mv__texto--destacado {
+    font-family: var(--fuente-titulo);
+    font-size: clamp(1.3rem, 2.1vw, 1.6rem);
+    font-weight: 420;
+    line-height: 1.4;
+    color: var(--azul-profundo);
+  }
+
+  .mv__areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mv__areas li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 12px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--borde);
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .mv__areas li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--acento);
+    transform: rotate(45deg);
+    border-radius: 1.5px;
+  }
+
+  @media (max-width: 899px) {
+    .mv {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
