@@ -1,0 +1,215 @@
+---
+// Flor de fondo que florece con el scroll. La geometría sale del logo:
+// anillo 1 = las piezas del logo, anillos 2 y 3 = pétalos rombo que se
+// despliegan, anillo 4 = semillas que se dispersan hacia el final.
+import { petalosLogo, centroLogo, type Color } from '../data/flor';
+
+const ciclo = (colores: Color[], i: number) => colores[i % colores.length];
+
+const anillo2 = Array.from({ length: 8 }, (_, i) => ({
+  ang: 22.5 + i * 45,
+  color: ciclo(['azul', 'verde', 'coral', 'ambar'], i),
+}));
+
+const anillo3 = Array.from({ length: 12 }, (_, i) => ({
+  ang: i * 30,
+  color: ciclo(['coral', 'ambar', 'verde', 'azul'], i),
+}));
+
+const semillas = Array.from({ length: 16 }, (_, i) => ({
+  ang: 11.25 + i * 22.5,
+  color: ciclo(['ambar', 'coral', 'azul', 'verde'], i),
+}));
+
+const halos = [275, 385];
+---
+
+<div class="fondo-flor" aria-hidden="true">
+  <div class="lavado lavado--brote"></div>
+  <div class="lavado lavado--calido"></div>
+  <div class="lavado lavado--atardecer"></div>
+
+  <svg class="flor" viewBox="-460 -460 920 920" focusable="false">
+    <g class="flor__respira">
+      {
+        halos.map((r) => (
+          <circle
+            class="flor__halo"
+            r={r}
+            fill="none"
+            stroke="var(--azul)"
+            stroke-width="1.5"
+            stroke-dasharray="4 10"
+            pathLength="1000"
+          />
+        ))
+      }
+
+      <g>
+        {
+          semillas.map((s, i) => (
+            <path
+              class="flor__pieza"
+              data-anillo="4"
+              data-i={i}
+              data-ang={s.ang}
+              d="M0 -10 L10 0 L0 10 L-10 0 Z"
+              fill={`var(--${s.color})`}
+            />
+          ))
+        }
+      </g>
+
+      <g opacity="0.62">
+        {
+          anillo3.map((p, i) => (
+            <path
+              class="flor__pieza"
+              data-anillo="3"
+              data-i={i}
+              data-ang={p.ang}
+              d="M0 -165 L22 -248 L0 -330 L-22 -248 Z"
+              fill={`var(--${p.color})`}
+            />
+          ))
+        }
+      </g>
+
+      <g opacity="0.88">
+        {
+          anillo2.map((p, i) => (
+            <path
+              class="flor__pieza"
+              data-anillo="2"
+              data-i={i}
+              data-ang={p.ang}
+              d="M0 -62 L48 -150 L0 -240 L-48 -150 Z"
+              fill={`var(--${p.color})`}
+            />
+          ))
+        }
+      </g>
+
+      <g>
+        {
+          petalosLogo.map((p, i) => (
+            <path
+              class="flor__pieza"
+              data-anillo="1"
+              data-i={i}
+              data-cx={p.cx}
+              data-cy={p.cy}
+              data-color={p.color}
+              d={p.d}
+              fill={`var(--${p.color})`}
+            />
+          ))
+        }
+        <path class="flor__centro" d={centroLogo} fill="var(--coral)" />
+      </g>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .fondo-flor {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Velo sobre la flor para que el texto, alineado a la izquierda, se lea bien. */
+  .fondo-flor::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgb(251 250 246 / 0.9) 0%,
+      rgb(251 250 246 / 0.7) 38%,
+      rgb(251 250 246 / 0) 62%
+    );
+  }
+
+  .lavado {
+    position: absolute;
+    inset: -10%;
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  .lavado--brote {
+    background:
+      radial-gradient(60% 55% at 75% 50%, rgb(175 221 131 / 0.32), transparent 70%),
+      radial-gradient(40% 40% at 15% 15%, rgb(57 94 159 / 0.08), transparent 70%);
+    opacity: 1;
+  }
+
+  .lavado--calido {
+    background:
+      radial-gradient(55% 50% at 78% 45%, rgb(249 180 1 / 0.2), transparent 70%),
+      radial-gradient(45% 45% at 20% 80%, rgb(255 99 100 / 0.12), transparent 70%);
+  }
+
+  .lavado--atardecer {
+    background:
+      radial-gradient(60% 60% at 75% 55%, rgb(255 99 100 / 0.14), transparent 70%),
+      radial-gradient(60% 60% at 10% 30%, rgb(57 94 159 / 0.14), transparent 70%);
+  }
+
+  .flor {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: min(118vmin, 1180px);
+    height: min(118vmin, 1180px);
+    max-width: none;
+    overflow: visible;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+  }
+
+  /* Antes de que corra el script, la flor queda oculta para no "saltar". */
+  .fondo-flor:not(.listo) .flor {
+    opacity: 0;
+  }
+
+  .flor__pieza,
+  .flor__centro {
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+
+  .flor__respira {
+    transform-box: view-box;
+    transform-origin: 0 0;
+    animation: respirar 6s ease-in-out infinite;
+  }
+
+  @keyframes respirar {
+    50% {
+      transform: scale(1.03);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .flor {
+      width: 150vw;
+      height: 150vw;
+    }
+
+    .fondo-flor::after {
+      background: rgb(251 250 246 / 0.35);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flor__respira {
+      animation: none;
+    }
+  }
+</style>
+
+<script src="../scripts/florecer.ts"></script>

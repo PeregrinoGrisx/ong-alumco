@@ -1,0 +1,25 @@
+---
+import { petalosLogo, centroLogo } from '../data/flor';
+
+interface Props {
+  size?: number;
+  // "color" usa la paleta de la marca; "mono" usa currentColor.
+  variante?: 'color' | 'mono';
+  class?: string;
+}
+
+const { size = 40, variante = 'color', class: clase } = Astro.props;
+const relleno = (color: string) => (variante === 'mono' ? 'currentColor' : `var(--${color})`);
+---
+
+<svg
+  class={clase}
+  width={size}
+  height={size}
+  viewBox="-102 -102 204 204"
+  aria-hidden="true"
+  focusable="false"
+>
+  {petalosLogo.map((p) => <path d={p.d} fill={relleno(p.color)} />)}
+  <path d={centroLogo} fill={relleno('coral')} />
+</svg>

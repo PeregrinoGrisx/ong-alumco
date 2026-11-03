@@ -1,0 +1,49 @@
+---
+// El logo en silueta con las piezas de un valor encendidas en su color.
+import { petalosLogo, centroLogo } from '../data/flor';
+
+interface Props {
+  piezas: readonly string[];
+}
+
+const { piezas } = Astro.props;
+const todas = [...petalosLogo, { id: 'centro', d: centroLogo, color: 'coral' as const, cx: 0, cy: 0 }];
+---
+
+<svg class="emblema" viewBox="-102 -102 204 204" aria-hidden="true" focusable="false" data-florecer>
+  {
+    todas.map((p) =>
+      piezas.includes(p.id) ? (
+        <path class="emblema__activa" d={p.d} fill={`var(--${p.color})`} />
+      ) : (
+        <path d={p.d} fill="rgb(57 94 159 / 0.13)" />
+      ),
+    )
+  }
+</svg>
+
+<style>
+  .emblema {
+    width: 64px;
+    height: 64px;
+    overflow: visible;
+  }
+
+  .emblema__activa {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    transition: transform 0.7s cubic-bezier(0.3, 1.4, 0.4, 1) 0.25s;
+  }
+
+  .emblema:global(.visible) .emblema__activa {
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .emblema__activa {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

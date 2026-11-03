@@ -1,0 +1,105 @@
+---
+import { validaciones } from '../data/sitio';
+
+const colores = ['verde', 'coral', 'ambar', 'azul'];
+---
+
+<section id="validaciones" class="validaciones" aria-label="Por qué confiar en nosotras">
+  <div class="contenedor">
+    <ul class="validaciones__lista panel" data-revelar>
+      {
+        validaciones.map((v, i) => (
+          <li class="validacion" style={`--acento: var(--${colores[i]})`}>
+            <span class="validacion__rombo" aria-hidden="true" />
+            <p class="validacion__cifra">{v.cifra}</p>
+            <p class="validacion__titulo">{v.titulo}</p>
+            <p class="validacion__texto">{v.texto}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .validaciones {
+    position: relative;
+    padding-block: 24px clamp(40px, 8vw, 80px);
+  }
+
+  .validaciones__lista {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .validacion {
+    position: relative;
+    padding: clamp(26px, 3vw, 38px);
+  }
+
+  .validacion + .validacion {
+    border-left: 1px solid var(--borde);
+  }
+
+  .validacion__rombo {
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin-bottom: 18px;
+    background: var(--acento);
+    transform: rotate(45deg);
+    border-radius: 3px;
+  }
+
+  .validacion__cifra {
+    font-family: var(--fuente-titulo);
+    font-size: clamp(2.2rem, 3.6vw, 3rem);
+    font-weight: 560;
+    line-height: 1;
+    color: var(--azul-profundo);
+  }
+
+  .validacion__titulo {
+    margin-top: 8px;
+    font-family: var(--fuente-texto);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--tinta);
+  }
+
+  .validacion__texto {
+    margin-top: 8px;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--tinta-suave);
+  }
+
+  @media (max-width: 899px) {
+    .validaciones__lista {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .validacion:nth-child(3) {
+      border-left: 0;
+    }
+
+    .validacion:nth-child(n + 3) {
+      border-top: 1px solid var(--borde);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .validaciones__lista {
+      grid-template-columns: 1fr;
+    }
+
+    .validacion + .validacion {
+      border-left: 0;
+      border-top: 1px solid var(--borde);
+    }
+  }
+</style>

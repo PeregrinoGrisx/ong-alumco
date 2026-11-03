@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import FondoFlor from '../components/FondoFlor.astro';
+import Cabecera from '../components/Cabecera.astro';
+import Hero from '../components/Hero.astro';
+import Validaciones from '../components/Validaciones.astro';
+import MisionVision from '../components/MisionVision.astro';
+import Nosotros from '../components/Nosotros.astro';
+import Memorias from '../components/Memorias.astro';
+import Contacto from '../components/Contacto.astro';
+import Pie from '../components/Pie.astro';
+import { hero } from '../data/sitio';
+---
+
+<Base titulo="ONG Alumco · Cuidado de personas mayores en Hualpén" descripcion={hero.bajada}>
+  <FondoFlor />
+  <Cabecera />
+  <main id="contenido">
+    <Hero />
+    <Validaciones />
+    <MisionVision />
+    <Nosotros />
+    <Memorias />
+    <Contacto />
+  </main>
+  <Pie />
+</Base>

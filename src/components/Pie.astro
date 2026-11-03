@@ -1,0 +1,159 @@
+---
+import LogoMark from './LogoMark.astro';
+import FlorSeccion from './FlorSeccion.astro';
+import { contacto, navegacion } from '../data/sitio';
+
+const anio = new Date().getFullYear();
+---
+
+<footer id="pie" class="pie">
+  <div class="pie__jardin" aria-hidden="true">
+    {Array.from({ length: 7 }, () => <FlorSeccion size={34} />)}
+  </div>
+
+  <div class="contenedor pie__grilla">
+    <div class="pie__marca">
+      <a class="pie__logo" href="#inicio" aria-label="ONG Alumco, volver al inicio">
+        <LogoMark size={52} />
+        <span>alumco</span>
+      </a>
+      <p class="pie__lema">Nuestros cuidados son el reflejo de la empatía.</p>
+    </div>
+
+    <nav class="pie__columna" aria-label="Secciones">
+      <h2 class="pie__titulo">Secciones</h2>
+      <ul>
+        {navegacion.map((item) => (
+          <li>
+            <a href={item.href}>{item.texto}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="pie__columna">
+      <h2 class="pie__titulo">Contacto</h2>
+      <ul>
+        {contacto.correos.map((c) => (
+          <li>
+            <a href={`mailto:${c.correo}`}>{c.correo}</a>
+          </li>
+        ))}
+        <li>
+          <a href={contacto.instagram.url} target="_blank" rel="noopener noreferrer">
+            Instagram {contacto.instagram.usuario}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="contenedor pie__legal">
+    <p>© {anio} ONG Alumco · ELEAM Hualpén, Región del Biobío</p>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    position: relative;
+    z-index: 1;
+    margin-top: clamp(40px, 8vw, 100px);
+    padding: 0 0 32px;
+    background: var(--azul-noche);
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  .pie__jardin {
+    display: flex;
+    justify-content: space-around;
+    transform: translateY(-50%);
+    padding-inline: var(--margen);
+  }
+
+  .pie__jardin :global(.flor-seccion:nth-child(even)) {
+    margin-top: 26px;
+  }
+
+  .pie__grilla {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    padding-top: clamp(24px, 4vw, 48px);
+  }
+
+  .pie__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font: 800 2.1rem/1 var(--fuente-texto);
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .pie__lema {
+    margin-top: 18px;
+    max-width: 26ch;
+    font-family: var(--fuente-titulo);
+    font-size: 1.3rem;
+    font-style: italic;
+    line-height: 1.35;
+    color: rgb(255 255 255 / 0.9);
+  }
+
+  .pie__titulo {
+    font-family: var(--fuente-texto);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--verde);
+  }
+
+  .pie__columna ul {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pie__columna a {
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .pie__columna a:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .pie__legal {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    font-size: 0.9rem;
+    color: rgb(255 255 255 / 0.62);
+  }
+
+  @media (max-width: 899px) {
+    .pie__grilla {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .pie__marca {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .pie__grilla {
+      grid-template-columns: 1fr;
+    }
+
+    .pie__jardin :global(.flor-seccion:nth-child(n + 6)) {
+      display: none;
+    }
+  }
+</style>
