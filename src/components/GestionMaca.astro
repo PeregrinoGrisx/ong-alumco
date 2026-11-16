@@ -1,0 +1,121 @@
+---
+import FlorSeccion from './FlorSeccion.astro';
+import { maca } from '../data/sitio';
+
+const colores = ['coral', 'azul'];
+---
+
+<section id="maca" class="maca">
+  <div class="contenedor">
+    <div class="maca__panel panel" data-revelar>
+      <div class="maca__texto">
+        <p class="antetitulo"><FlorSeccion /> Gestión de la residencia</p>
+        <h2 class="maca__titulo">
+          Cuidamos con el apoyo de <span class="maca__marca">MACA</span>
+        </h2>
+        <p class="maca__bajada">{maca.texto}</p>
+      </div>
+
+      <ul class="maca__areas">
+        {
+          maca.areas.map((a, i) => (
+            <li style={`--acento: var(--${colores[i % colores.length]})`}>
+              <span class="maca__rombo" aria-hidden="true" />
+              <div>
+                <h3>{a.titulo}</h3>
+                <p>{a.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .maca {
+    position: relative;
+    padding-block: clamp(8px, 2vw, 24px);
+  }
+
+  .maca__panel {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(28px, 4vw, 48px);
+    background:
+      radial-gradient(90% 120% at 0% 0%, rgb(57 94 159 / 0.1), transparent 60%),
+      var(--superficie);
+  }
+
+  .maca__titulo {
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  }
+
+  .maca__marca {
+    display: inline-block;
+    padding: 0 0.3em;
+    border-radius: 0.25em;
+    background: var(--azul);
+    color: #fff;
+    font-family: var(--fuente-texto);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .maca__bajada {
+    margin-top: 16px;
+    max-width: 52ch;
+    color: var(--tinta-suave);
+  }
+
+  .maca__areas {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .maca__areas li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    border-radius: var(--radio-sm);
+    background: #fff;
+    border: 1px solid var(--borde);
+  }
+
+  .maca__rombo {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-top: 6px;
+    background: var(--acento);
+    transform: rotate(45deg);
+    border-radius: 3px;
+  }
+
+  .maca__areas h3 {
+    font-family: var(--fuente-texto);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--tinta);
+  }
+
+  .maca__areas p {
+    margin-top: 4px;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--tinta-suave);
+  }
+
+  @media (max-width: 899px) {
+    .maca__panel {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
