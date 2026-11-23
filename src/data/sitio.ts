@@ -65,6 +65,15 @@ export const nosotros = [
   'Trabajamos como un equipo transdisciplinario, coordinado con la comunidad, y rendimos cuentas de manera abierta. La confianza, como una flor, se cultiva todos los días.',
 ];
 
+export const maca = {
+  texto:
+    'En nuestra residencia utilizamos MACA para la gestión clínica y administrativa. Así, el equipo trabaja con información ordenada y compartida, y dedica más tiempo a lo que importa: las personas.',
+  areas: [
+    { titulo: 'Gestión clínica', texto: 'El seguimiento de la salud y los cuidados de cada residente.' },
+    { titulo: 'Gestión administrativa', texto: 'La organización de los procesos y recursos de la residencia.' },
+  ],
+};
+
 export const memorias = {
   texto:
     'La transparencia financiera es fundamental para nosotros. A lo largo del año, hemos gestionado nuestros recursos con responsabilidad y eficiencia, asegurando que cada donación se utilice para el beneficio directo de nuestros residentes. Nuestro compromiso con la integridad financiera se refleja en cada partida de gastos.',
